@@ -1,5 +1,6 @@
 package com.nursinglab.booking.component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseComponent {
@@ -7,10 +8,10 @@ public class ResponseComponent {
     private Integer error;
     private String status;
     private RecordsComponent records;
-    private List<ResultComponent> result;
+    private ArrayList<ResultComponent> result;
     private List<BookingIdComponent> booking;
 
-    public ResponseComponent(Integer error, String status, RecordsComponent records, List<ResultComponent> result, List<BookingIdComponent> booking) {
+    public ResponseComponent(Integer error, String status, RecordsComponent records, ArrayList<ResultComponent> result, List<BookingIdComponent> booking) {
         this.error = error;
         this.status = status;
         this.records = records;
@@ -26,11 +27,11 @@ public class ResponseComponent {
         this.booking = booking;
     }
 
-    public List<ResultComponent> getResult() {
+    public ArrayList<ResultComponent> getResult() {
         return result;
     }
 
-    public void setResult(List<ResultComponent> result) {
+    public void setResult(ArrayList<ResultComponent> result) {
         this.result = result;
     }
 

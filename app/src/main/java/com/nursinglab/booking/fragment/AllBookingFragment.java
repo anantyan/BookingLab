@@ -2,7 +2,6 @@ package com.nursinglab.booking.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nursinglab.booking.R;
@@ -34,7 +32,6 @@ import com.nursinglab.booking.listener.RecyclerOnItemListener;
 import com.nursinglab.booking.util.RetrofitUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +49,7 @@ public class AllBookingFragment extends Fragment {
 
     private MenuItem menuItem;
     private SearchView searchView;
-    private List<ResultComponent> result = new ArrayList<>();
+    private ArrayList<ResultComponent> result = new ArrayList<>();
     private AllBookingAdapter allBookingAdapter;
 
     @Override
@@ -140,9 +137,17 @@ public class AllBookingFragment extends Fragment {
 
     private void recyclerView() {
         allBookingAdapter = new AllBookingAdapter(getActivity(), result);
-        /*allBookingAdapter.setClickListener(this.getActivity(), new AllBookingAdapter.ClickListener() {
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this.rootLayout.getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(allBookingAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerOnItemListener(getActivity(), recyclerView, new RecyclerOnItemListener.ClickListener() {
+            ResultComponent resultComponent;
             @Override
-            public void Click(View view, ResultComponent resultComponent) {
+            public void onClick(View view, int position) {
+                resultComponent = result.get(position);
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootLayout.getContext());
                 alertDialogBuilder.setTitle(resultComponent.getNama_lab());
                 alertDialogBuilder
@@ -164,16 +169,11 @@ public class AllBookingFragment extends Fragment {
             }
 
             @Override
-            public void LongClick(View view, ResultComponent resultComponent) {
+            public void onLongClick(View view, int position) {
+                resultComponent = result.get(position);
                 Toast.makeText(getActivity(), resultComponent.getNama_lab(), Toast.LENGTH_SHORT).show();
             }
-        });*/
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this.rootLayout.getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(allBookingAdapter);
+        }));
     }
 
     @Override
