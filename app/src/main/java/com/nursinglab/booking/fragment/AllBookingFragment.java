@@ -28,6 +28,7 @@ import com.nursinglab.booking.component.RecordsComponent;
 import com.nursinglab.booking.component.ResponseComponent;
 import com.nursinglab.booking.component.ResultComponent;
 import com.nursinglab.booking.component.SharedPreferenceComponent;
+import com.nursinglab.booking.helper.ItemClickHelper;
 import com.nursinglab.booking.listener.RecyclerOnItemListener;
 import com.nursinglab.booking.util.RetrofitUtil;
 
@@ -102,12 +103,15 @@ public class AllBookingFragment extends Fragment {
                 Integer error = response.body() != null ? response.body().getError() : null;
                 String status = response.body() != null ? response.body().getStatus() : null;
                 RecordsComponent records = response.body() != null ? response.body().getRecords() : null;
-                result = response.body() != null ? response.body().getResult() : null;
+                ArrayList<ResultComponent> list = response.body() != null ? response.body().getResult() : null;
                 if(response.isSuccessful()){
                     assert error != null;
                     if(error.equals(1)) {
-                        allBookingAdapter = new AllBookingAdapter(getActivity(), result);
-                        recyclerView.setAdapter(allBookingAdapter);
+                        result.clear();
+                        if(list != null) {
+                            result.addAll(list);
+                            allBookingAdapter.notifyDataSetChanged();
+                        }
                     }else{
                         String getId = records != null ? records.getId() : "Empty";
                         Toast.makeText(getActivity(), status+" "+getId, Toast.LENGTH_SHORT).show();
@@ -136,18 +140,10 @@ public class AllBookingFragment extends Fragment {
     }
 
     private void recyclerView() {
-        allBookingAdapter = new AllBookingAdapter(getActivity(), result);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this.rootLayout.getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(allBookingAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerOnItemListener(getActivity(), recyclerView, new RecyclerOnItemListener.ClickListener() {
-            ResultComponent resultComponent;
+        allBookingAdapter = new AllBookingAdapter(new ItemClickHelper() {
             @Override
-            public void onClick(View view, int position) {
-                resultComponent = result.get(position);
+            public void onItemClick(int position) {
+                ResultComponent resultComponent = result.get(position);
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootLayout.getContext());
                 alertDialogBuilder.setTitle(resultComponent.getNama_lab());
                 alertDialogBuilder
@@ -169,11 +165,17 @@ public class AllBookingFragment extends Fragment {
             }
 
             @Override
-            public void onLongClick(View view, int position) {
-                resultComponent = result.get(position);
+            public void onLongItemClick(int position) {
+                ResultComponent resultComponent = result.get(position);
                 Toast.makeText(getActivity(), resultComponent.getNama_lab(), Toast.LENGTH_SHORT).show();
             }
-        }));
+        }, result);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this.rootLayout.getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(allBookingAdapter);
     }
 
     @Override
@@ -225,4 +227,5 @@ public class AllBookingFragment extends Fragment {
     public void onResume() {
         super.onResume();
     }
+
 }

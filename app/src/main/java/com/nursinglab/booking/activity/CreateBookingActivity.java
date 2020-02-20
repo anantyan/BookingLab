@@ -165,7 +165,7 @@ public class CreateBookingActivity extends AppCompatActivity {
 
         Retrofit retrofit = RetrofitUtil.getClient();
         Booking bkng = retrofit.create(Booking.class);
-        Call<ResponseComponent> call = bkng.insert(id, data[0], data[1], data[2], Integer.parseInt(data[3]), Integer.parseInt(data[4]), Integer.parseInt(data[5]));
+        Call<ResponseComponent> call = bkng.insert(id, data[0], data[1], data[2], data[3], data[4], data[5]);
         call.enqueue(new Callback<ResponseComponent>() {
             @Override
             public void onResponse(Call<ResponseComponent> call, Response<ResponseComponent> response) {

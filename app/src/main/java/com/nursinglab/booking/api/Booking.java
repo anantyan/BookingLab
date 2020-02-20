@@ -32,9 +32,9 @@ public interface Booking {
             @Field("waktu_mulai") String waktu_mulai,
             @Field("waktu_selesai") String waktu_selesai,
             @Field("tanggal") String tanggal,
-            @Field("id_dosen") int id_dosen,
-            @Field("id_lab") int id_lab,
-            @Field("id_praktikum") int id_praktikum
+            @Field("id_dosen") String id_dosen,
+            @Field("id_lab") String id_lab,
+            @Field("id_praktikum") String id_praktikum
     );
 
     @GET("booking_api/delete/{id}")

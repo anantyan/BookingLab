@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nursinglab.booking.R;
 import com.nursinglab.booking.component.ResultComponent;
+import com.nursinglab.booking.helper.ItemClickHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +26,10 @@ public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.Vi
 
     private ArrayList<ResultComponent> result;
     private ArrayList<ResultComponent> resultFull;
-    private Context context;
+    private ItemClickHelper itemClickHelper;
 
-    public AllBookingAdapter(Context context, ArrayList<ResultComponent> result) {
-        this.context = context;
+    public AllBookingAdapter(ItemClickHelper itemClickHelper, ArrayList<ResultComponent> result) {
+        this.itemClickHelper = itemClickHelper;
         this.result = result;
         resultFull = new ArrayList<>(result);
     }
@@ -40,9 +42,26 @@ public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.Vi
         @BindView(R.id._waktu_mulai) TextView waktuMulai;
         @BindView(R.id._expired) TextView expired;
 
-        ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView, final ItemClickHelper itemClickHelper) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(itemClickHelper != null) {
+                        itemClickHelper.onItemClick(getAdapterPosition());
+                    }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if(itemClickHelper != null) {
+                        itemClickHelper.onLongItemClick(getAdapterPosition());
+                    }
+                    return true;
+                }
+            });
         }
     }
 
@@ -50,7 +69,7 @@ public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.Vi
     @Override
     public AllBookingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_recycler_all_booking, viewGroup, false);
-        ViewHolder holder = new ViewHolder(v);
+        ViewHolder holder = new ViewHolder(v, itemClickHelper);
         return holder;
     }
 

@@ -1,5 +1,6 @@
 package com.nursinglab.booking.fragment;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.nursinglab.booking.component.RecordsComponent;
 import com.nursinglab.booking.component.ResponseComponent;
 import com.nursinglab.booking.component.ResultComponent;
 import com.nursinglab.booking.component.SharedPreferenceComponent;
+import com.nursinglab.booking.helper.ItemClickHelper;
 import com.nursinglab.booking.listener.RecyclerOnItemListener;
 import com.nursinglab.booking.util.RetrofitUtil;
 
@@ -118,12 +120,15 @@ public class MyBookingFragment extends Fragment {
                 Integer error = response.body() != null ? response.body().getError() : null;
                 String status = response.body() != null ? response.body().getStatus() : null;
                 RecordsComponent records = response.body() != null ? response.body().getRecords() : null;
-                result = response.body() != null ? response.body().getResult() : null;
+                ArrayList<ResultComponent> list = response.body() != null ? response.body().getResult() : null;
                 if(response.isSuccessful()){
                     assert error != null;
                     if(error.equals(1)) {
-                        myBookingAdapter = new MyBookingAdapter(getActivity(), result);
-                        recyclerView.setAdapter(myBookingAdapter);
+                        result.clear();
+                        if(list != null) {
+                            result.addAll(list);
+                            myBookingAdapter.notifyDataSetChanged();
+                        }
                     }else{
                         String getId = records != null ? records.getId() : "Empty";
                         Toast.makeText(getActivity(), status+" "+getId, Toast.LENGTH_SHORT).show();
@@ -152,29 +157,10 @@ public class MyBookingFragment extends Fragment {
     }
 
     private void recyclerView() {
-        myBookingAdapter = new MyBookingAdapter(getActivity(), result);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this.rootLayout.getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(myBookingAdapter);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        myBookingAdapter = new MyBookingAdapter(new ItemClickHelper() {
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0 && floatingCreate.getVisibility() == View.VISIBLE) {
-                    floatingCreate.hide();
-                } else if (dy < 0 && floatingCreate.getVisibility() != View.VISIBLE) {
-                    floatingCreate.show();
-                }
-            }
-        });
-        recyclerView.addOnItemTouchListener(new RecyclerOnItemListener(this.getActivity(), recyclerView, new RecyclerOnItemListener.ClickListener() {
-            ResultComponent resultComponent;
-            @Override
-            public void onClick(View view, int position) {
-                resultComponent = result.get(position);
+            public void onItemClick(int position) {
+                ResultComponent resultComponent = result.get(position);
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootLayout.getContext());
                 alertDialogBuilder.setTitle(resultComponent.getNama_lab());
                 alertDialogBuilder
@@ -194,10 +180,13 @@ public class MyBookingFragment extends Fragment {
             }
 
             @Override
-            public void onLongClick(View view, int position) {
-                resultComponent = result.get(position);
+            public void onLongItemClick(int position) {
+                ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("Tunggu...");
+                progressDialog.show();
+                ResultComponent resultComponent = result.get(position);
                 String id_booking = resultComponent.getId();
-                String id_user = new SharedPreferenceComponent(rootLayout.getContext()).getDataId();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootLayout.getContext());
                 alertDialogBuilder.setTitle(resultComponent.getNama_lab());
                 alertDialogBuilder
@@ -211,13 +200,15 @@ public class MyBookingFragment extends Fragment {
                                 call.enqueue(new Callback<ResponseComponent>() {
                                     @Override
                                     public void onResponse(Call<ResponseComponent> call, Response<ResponseComponent> response) {
+                                        progressDialog.dismiss();
                                         Integer error = response.body() != null ? response.body().getError() : null;
                                         String status = response.body() != null ? response.body().getStatus() : null;
                                         if(response.isSuccessful()){
                                             assert error != null;
                                             if(error.equals(1)) {
                                                 Toast.makeText(rootLayout.getContext(), status, Toast.LENGTH_SHORT).show();
-                                                getData(id_user);
+                                                result.remove(position);
+                                                myBookingAdapter.notifyDataSetChanged();
                                             }else{
                                                 Toast.makeText(rootLayout.getContext(), status, Toast.LENGTH_SHORT).show();
                                             }
@@ -229,6 +220,7 @@ public class MyBookingFragment extends Fragment {
 
                                     @Override
                                     public void onFailure(Call<ResponseComponent> call, Throwable t) {
+                                        progressDialog.dismiss();
                                         Snackbar.make(rootLayout, "Kesalahan pada jaringan!", Snackbar.LENGTH_LONG)
                                                 .setAction("Oke", new View.OnClickListener() {
                                                     @Override
@@ -251,7 +243,24 @@ public class MyBookingFragment extends Fragment {
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
             }
-        }));
+        }, result);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this.rootLayout.getContext(), LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(myBookingAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && floatingCreate.getVisibility() == View.VISIBLE) {
+                    floatingCreate.hide();
+                } else if (dy < 0 && floatingCreate.getVisibility() != View.VISIBLE) {
+                    floatingCreate.show();
+                }
+            }
+        });
     }
 
     @Override
