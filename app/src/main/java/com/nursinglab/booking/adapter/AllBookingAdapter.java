@@ -24,17 +24,17 @@ import butterknife.ButterKnife;
 
 public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.ViewHolder> implements Filterable {
 
-    private ArrayList<ResultComponent> result;
-    private ArrayList<ResultComponent> resultFull;
+    private List<ResultComponent> result;
+    private List<ResultComponent> resultFull;
     private ItemClickHelper itemClickHelper;
 
-    public AllBookingAdapter(ItemClickHelper itemClickHelper, ArrayList<ResultComponent> result) {
+    public AllBookingAdapter(ItemClickHelper itemClickHelper, List<ResultComponent> result) {
         this.itemClickHelper = itemClickHelper;
         this.result = result;
-        resultFull = new ArrayList<>(result);
+        this.resultFull = result;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    static class ViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id._nama_lab) TextView namaLab;
         @BindView(R.id._kelas) TextView namaKelas;
@@ -138,8 +138,7 @@ public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.Vi
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            result.clear();
-            result.addAll((List) results.values);
+            result = (List) results.values;
             notifyDataSetChanged();
         }
     };

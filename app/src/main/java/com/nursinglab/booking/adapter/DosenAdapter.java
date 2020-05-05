@@ -30,7 +30,7 @@ public class DosenAdapter extends RecyclerView.Adapter<DosenAdapter.ViewHolder> 
     public DosenAdapter(Context context, List<BookingIdComponent> booking) {
         this.context = context;
         this.booking = booking;
-        bookingFull = new ArrayList<>(booking);
+        this.bookingFull = booking;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -70,8 +70,7 @@ public class DosenAdapter extends RecyclerView.Adapter<DosenAdapter.ViewHolder> 
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            booking.clear();
-            booking.addAll((List) results.values);
+            booking = (List) results.values;
             notifyDataSetChanged();
         }
     };

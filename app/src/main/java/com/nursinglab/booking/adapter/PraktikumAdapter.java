@@ -29,7 +29,7 @@ public class PraktikumAdapter extends RecyclerView.Adapter<PraktikumAdapter.View
     public PraktikumAdapter(Context context, List<BookingIdComponent> booking) {
         this.context = context;
         this.booking = booking;
-        bookingFull = new ArrayList<>(booking);
+        this.bookingFull = booking;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -69,8 +69,7 @@ public class PraktikumAdapter extends RecyclerView.Adapter<PraktikumAdapter.View
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            booking.clear();
-            booking.addAll((List) results.values);
+            booking = (List) results.values;
             notifyDataSetChanged();
         }
     };

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -70,7 +71,12 @@ public class MyBookingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_my_booking, container, false);
+        return inflater.inflate(R.layout.fragment_my_booking, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
         //sharedPreference get ID
@@ -91,8 +97,6 @@ public class MyBookingFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-
-        return view;
     }
 
     private void floatingCreate() {
@@ -120,7 +124,7 @@ public class MyBookingFragment extends Fragment {
                 Integer error = response.body() != null ? response.body().getError() : null;
                 String status = response.body() != null ? response.body().getStatus() : null;
                 RecordsComponent records = response.body() != null ? response.body().getRecords() : null;
-                ArrayList<ResultComponent> list = response.body() != null ? response.body().getResult() : null;
+                List<ResultComponent> list = response.body() != null ? response.body().getResult() : null;
                 if(response.isSuccessful()){
                     assert error != null;
                     if(error.equals(1)) {
@@ -237,6 +241,7 @@ public class MyBookingFragment extends Fragment {
                         .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                progressDialog.dismiss();
                                 dialogInterface.dismiss();
                             }
                         });

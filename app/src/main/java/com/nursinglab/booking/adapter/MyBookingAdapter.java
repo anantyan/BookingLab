@@ -43,7 +43,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
     public MyBookingAdapter(ItemClickHelper itemClickHelper, List<ResultComponent> result) {
         this.itemClickHelper = itemClickHelper;
         this.result = result;
-        resultFull = new ArrayList<>(result);
+        this.resultFull = result;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -145,8 +145,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            result.clear();
-            result.addAll((List) results.values);
+            result = (List) results.values;
             notifyDataSetChanged();
         }
     };

@@ -2,6 +2,8 @@ package com.nursinglab.booking.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,6 +35,7 @@ import com.nursinglab.booking.listener.RecyclerOnItemListener;
 import com.nursinglab.booking.util.RetrofitUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +53,7 @@ public class AllBookingFragment extends Fragment {
 
     private MenuItem menuItem;
     private SearchView searchView;
-    private ArrayList<ResultComponent> result = new ArrayList<>();
+    private List<ResultComponent> result = new ArrayList<>();
     private AllBookingAdapter allBookingAdapter;
 
     @Override
@@ -63,14 +66,18 @@ public class AllBookingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_all_booking, container, false);
+        return inflater.inflate(R.layout.fragment_all_booking, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
         //sharedPreference get ID
         String id = new SharedPreferenceComponent(this.getActivity()).getDataId();
         getData(id);
         recyclerView();
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -83,9 +90,6 @@ public class AllBookingFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-
-
-        return view;
     }
 
     private void getData(String id) {
@@ -103,7 +107,7 @@ public class AllBookingFragment extends Fragment {
                 Integer error = response.body() != null ? response.body().getError() : null;
                 String status = response.body() != null ? response.body().getStatus() : null;
                 RecordsComponent records = response.body() != null ? response.body().getRecords() : null;
-                ArrayList<ResultComponent> list = response.body() != null ? response.body().getResult() : null;
+                List<ResultComponent> list = response.body() != null ? response.body().getResult() : null;
                 if(response.isSuccessful()){
                     assert error != null;
                     if(error.equals(1)) {
