@@ -20,8 +20,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtil {
 
-    public static final String BASE_URL = "http://192.168.3.24/booking-nursinglab/";
-    public static final String BASE_URL_NURSINGLAB = "http://192.168.3.24/nursinglab/";
+    public static final String BASE_URL = "http://192.168.1.6/booking-nursinglab/";
+    public static final String BASE_URL_NURSINGLAB = "http://192.168.1.6/nursinglab/";
     public static Retrofit retrofit = null;
 
     public static boolean checkClient() {

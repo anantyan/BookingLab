@@ -2,22 +2,21 @@ package com.nursinglab.booking.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.nursinglab.booking.R;
 import com.nursinglab.booking.api.Auth;
 import com.nursinglab.booking.component.RecordsComponent;
 import com.nursinglab.booking.component.ResponseComponent;
 import com.nursinglab.booking.component.SharedPreferenceComponent;
 import com.nursinglab.booking.util.RetrofitUtil;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

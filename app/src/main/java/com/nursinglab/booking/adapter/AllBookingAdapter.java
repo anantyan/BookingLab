@@ -1,16 +1,15 @@
 package com.nursinglab.booking.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nursinglab.booking.R;
 import com.nursinglab.booking.component.ResultComponent;
@@ -35,7 +34,6 @@ public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.Vi
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-
         @BindView(R.id._nama_lab) TextView namaLab;
         @BindView(R.id._kelas) TextView namaKelas;
         @BindView(R.id._nama_dosen) TextView namaDosen;

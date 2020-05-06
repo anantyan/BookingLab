@@ -1,36 +1,22 @@
 package com.nursinglab.booking.activity;
 
-import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nursinglab.booking.R;
-import com.nursinglab.booking.api.Auth;
-import com.nursinglab.booking.component.RecordsComponent;
-import com.nursinglab.booking.component.ResponseComponent;
-import com.nursinglab.booking.component.SharedPreferenceComponent;
 import com.nursinglab.booking.fragment.AllBookingFragment;
 import com.nursinglab.booking.fragment.MyBookingFragment;
 import com.nursinglab.booking.fragment.ProfileFragment;
-import com.nursinglab.booking.util.RetrofitUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 

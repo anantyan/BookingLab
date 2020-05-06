@@ -1,39 +1,32 @@
 package com.nursinglab.booking.fragment;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.nursinglab.booking.R;
-import com.nursinglab.booking.activity.MainActivity;
 import com.nursinglab.booking.api.Auth;
 import com.nursinglab.booking.component.RecordsComponent;
 import com.nursinglab.booking.component.ResponseComponent;
 import com.nursinglab.booking.component.SharedPreferenceComponent;
 import com.nursinglab.booking.util.GlideUtil;
 import com.nursinglab.booking.util.RetrofitUtil;
-
-import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,19 +89,20 @@ public class ProfileFragment extends Fragment {
                 if(response.isSuccessful()){
                     assert error != null;
                     if(error.equals(1)) {
-                        String username = records != null ? records.getUsername() : null;
-                        String nim = records != null ? records.getNim() : null;
-                        String nama_mahasiswa = records != null ? records.getNamaMahasiswa() : null;
-                        String foto_file = records != null ? records.getFotoFile() : null;
-                        String created_at = records != null ? records.getCreated_at() : null;
+                        assert records != null;
+                        String username = records.getUsername();
+                        String nim = records.getNim();
+                        String nama_mahasiswa = records.getNama_mahasiswa();
+                        String foto_file = records.getFoto_file();
+                        String created_at = records.getCreated_at();
 
-                        foto_file = RetrofitUtil.BASE_URL_NURSINGLAB+"uploads/foto_mahasiswa/"+foto_file;
+                        String test = RetrofitUtil.BASE_URL_NURSINGLAB+"uploads/foto_mahasiswa/"+foto_file;
 
                         usernameProfile.setText(username);
                         namaProfile.setText(nama_mahasiswa);
                         nimProfile.setText(nim);
                         createdAtProfile.setText(created_at);
-                        new GlideUtil(getActivity(), null).setGlideWithAccent(foto_file, photoProfile);
+                        new GlideUtil(getActivity(), null).setGlideWithAccent(test, photoProfile);
                     }else{
                         String getId = records != null ? records.getId() : "Empty";
                         Toast.makeText(getActivity(), status+" "+getId, Toast.LENGTH_SHORT).show();
