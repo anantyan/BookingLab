@@ -1,9 +1,6 @@
 package com.nursinglab.booking.adapter;
 
 import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +8,15 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.nursinglab.booking.R;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.nursinglab.booking.component.ResultComponent;
+import com.nursinglab.booking.databinding.ViewRecyclerAllBookingBinding;
 import com.nursinglab.booking.helper.ItemClickHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.ViewHolder> implements Filterable {
 
@@ -34,15 +31,16 @@ public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.Vi
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id._nama_lab) TextView namaLab;
-        @BindView(R.id._kelas) TextView namaKelas;
-        @BindView(R.id._nama_dosen) TextView namaDosen;
-        @BindView(R.id._waktu_mulai) TextView waktuMulai;
-        @BindView(R.id._expired) TextView expired;
 
-        ViewHolder(@NonNull View itemView, final ItemClickHelper itemClickHelper) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        private TextView namaLab, kelas, namaDosen, expired, waktu;
+
+        ViewHolder(ViewRecyclerAllBookingBinding binding, final ItemClickHelper itemClickHelper) {
+            super(binding.getRoot());
+            namaLab = binding.namaLab;
+            kelas = binding.kelas;
+            namaDosen = binding.namaDosen;
+            expired = binding.expired;
+            waktu = binding.waktuMulai;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -66,9 +64,8 @@ public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.Vi
     @NonNull
     @Override
     public AllBookingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_recycler_all_booking, viewGroup, false);
-        ViewHolder holder = new ViewHolder(v, itemClickHelper);
-        return holder;
+        ViewRecyclerAllBookingBinding binding = ViewRecyclerAllBookingBinding.inflate(LayoutInflater.from(viewGroup.getContext()));
+        return new ViewHolder(binding, itemClickHelper);
     }
 
     @Override
@@ -79,9 +76,9 @@ public class AllBookingAdapter extends RecyclerView.Adapter<AllBookingAdapter.Vi
         int b = Integer.parseInt(resultComponent.getAction());
 
         viewHolder.namaLab.setText(resultComponent.getNama_lab());
-        viewHolder.namaKelas.setText(resultComponent.getKelas());
+        viewHolder.kelas.setText(resultComponent.getKelas());
         viewHolder.namaDosen.setText(String.format("(%s)", a));
-        viewHolder.waktuMulai.setText(resultComponent.getWaktu_mulai());
+        viewHolder.waktu.setText(resultComponent.getWaktu_mulai());
 
         if(b == 0) {
             viewHolder.expired.setText("(Dipakai)");

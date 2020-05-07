@@ -1,23 +1,20 @@
 package com.nursinglab.booking.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.nursinglab.booking.R;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.nursinglab.booking.component.BookingIdComponent;
+import com.nursinglab.booking.databinding.ViewRecyclerBookingBinding;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class LabAdapter extends RecyclerView.Adapter<LabAdapter.ViewHolder> implements Filterable {
 
@@ -33,11 +30,11 @@ public class LabAdapter extends RecyclerView.Adapter<LabAdapter.ViewHolder> impl
 
     class ViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id._nama) TextView nama;
+        private TextView nama;
 
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        ViewHolder(ViewRecyclerBookingBinding binding) {
+            super(binding.getRoot());
+            nama = binding.nama;
         }
     }
 
@@ -76,9 +73,8 @@ public class LabAdapter extends RecyclerView.Adapter<LabAdapter.ViewHolder> impl
     @NonNull
     @Override
     public LabAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_recycler_booking, viewGroup, false);
-        LabAdapter.ViewHolder holder = new LabAdapter.ViewHolder(v);
-        return holder;
+        ViewRecyclerBookingBinding binding = ViewRecyclerBookingBinding.inflate(LayoutInflater.from(viewGroup.getContext()));
+        return new ViewHolder(binding);
     }
 
     @Override

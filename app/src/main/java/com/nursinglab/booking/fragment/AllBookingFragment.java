@@ -2,17 +2,6 @@ package com.nursinglab.booking.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,9 +9,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.nursinglab.booking.R;
 import com.nursinglab.booking.adapter.AllBookingAdapter;
 import com.nursinglab.booking.api.Booking;
@@ -30,14 +29,13 @@ import com.nursinglab.booking.component.RecordsComponent;
 import com.nursinglab.booking.component.ResponseComponent;
 import com.nursinglab.booking.component.ResultComponent;
 import com.nursinglab.booking.component.SharedPreferenceComponent;
+import com.nursinglab.booking.databinding.FragmentAllBookingBinding;
 import com.nursinglab.booking.helper.ItemClickHelper;
 import com.nursinglab.booking.util.RetrofitUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,15 +43,12 @@ import retrofit2.Retrofit;
 
 public class AllBookingFragment extends Fragment {
 
-    @BindView(R.id._select_data) RecyclerView recyclerView;
-    @BindView(R.id._progress_bar) ProgressBar progressBar;
-    @BindView(R.id._swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id._all_booking) View rootLayout;
-
     private MenuItem menuItem;
     private SearchView searchView;
     private List<ResultComponent> result = new ArrayList<>();
     private AllBookingAdapter allBookingAdapter;
+    private FragmentAllBookingBinding binding;
+    private View view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,20 +59,20 @@ public class AllBookingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_all_booking, container, false);
+        binding = FragmentAllBookingBinding.inflate(inflater, container, false);
+        view = binding.getRoot();
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
 
         //sharedPreference get ID
         String id = new SharedPreferenceComponent(this.getActivity()).getDataId();
         getData(id);
         recyclerView();
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
@@ -85,15 +80,15 @@ public class AllBookingFragment extends Fragment {
                 getData(id);
 
                 //StopAnimate with Delay
-                swipeRefreshLayout.setRefreshing(false);
+                binding.swipeRefresh.setRefreshing(false);
             }
         });
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        binding.swipeRefresh.setColorSchemeResources(R.color.colorAccent);
     }
 
     private void getData(String id) {
-        recyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+        binding.selectData.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = RetrofitUtil.getClient();
         Booking booking = retrofit.create(Booking.class);
@@ -101,8 +96,8 @@ public class AllBookingFragment extends Fragment {
         call.enqueue(new Callback<ResponseComponent>() {
             @Override
             public void onResponse(Call<ResponseComponent> call, Response<ResponseComponent> response) {
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.selectData.setVisibility(View.VISIBLE);
                 Integer error = response.body() != null ? response.body().getError() : null;
                 String status = response.body() != null ? response.body().getStatus() : null;
                 RecordsComponent records = response.body() != null ? response.body().getRecords() : null;
@@ -127,9 +122,9 @@ public class AllBookingFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ResponseComponent> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
-                Snackbar.make(rootLayout, "Kesalahan pada jaringan!", Snackbar.LENGTH_LONG)
+                binding.progressBar.setVisibility(View.GONE);
+                binding.selectData.setVisibility(View.GONE);
+                Snackbar.make(view, "Kesalahan pada jaringan!", Snackbar.LENGTH_LONG)
                         .setAction("Oke", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -147,7 +142,7 @@ public class AllBookingFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 ResultComponent resultComponent = result.get(position);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(rootLayout.getContext());
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
                 alertDialogBuilder.setTitle(resultComponent.getNama_lab());
                 alertDialogBuilder
                         .setMessage("Nim : "+resultComponent.getNim_mahasiswa()+"\n"+
@@ -174,11 +169,11 @@ public class AllBookingFragment extends Fragment {
             }
         }, result);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this.rootLayout.getContext(), LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(allBookingAdapter);
+        binding.selectData.setHasFixedSize(true);
+        binding.selectData.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        binding.selectData.setItemAnimator(new DefaultItemAnimator());
+        binding.selectData.addItemDecoration(new DividerItemDecoration(this.view.getContext(), LinearLayoutManager.VERTICAL));
+        binding.selectData.setAdapter(allBookingAdapter);
     }
 
     @Override
@@ -195,7 +190,7 @@ public class AllBookingFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_about){
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.rootLayout.getContext());
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.view.getContext());
             alertDialogBuilder
                     .setTitle("Tentang Aplikasi")
                     .setMessage("BookingLab\n" +
@@ -231,4 +226,9 @@ public class AllBookingFragment extends Fragment {
         super.onResume();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
 }

@@ -6,27 +6,23 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.nursinglab.booking.R;
 import com.nursinglab.booking.api.Booking;
 import com.nursinglab.booking.component.ResponseComponent;
 import com.nursinglab.booking.component.SharedPreferenceComponent;
+import com.nursinglab.booking.databinding.ActivityCreateBookingBinding;
 import com.nursinglab.booking.util.RetrofitUtil;
 
 import java.util.Calendar;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,16 +30,8 @@ import retrofit2.Retrofit;
 
 public class CreateBookingActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.txt_waktu_mulai) EditText txtWaktuMulai;
-    @BindView(R.id.txt_waktu_selesai) EditText txtWaktuSelesai;
-    @BindView(R.id.txt_tanggal) EditText txtTanggal;
-    @BindView(R.id.txt_dosen) EditText txtDosen;
-    @BindView(R.id.txt_lab) EditText txtLab;
-    @BindView(R.id.txt_praktikum) EditText txtPraktikum;
-    @BindView(R.id._btn_save) Button btnSave;
-
-    //reqest untuk result data kembali
+    private ActivityCreateBookingBinding binding;
+    private View view;
     private static String dosen_id, lab_id, praktikum_id;
     public static final String EXTRA_DOSEN_ID = "extra_dosen_id";
     public static final String EXTRA_DOSEN_NAME = "extra_dosen_name";
@@ -55,10 +43,11 @@ public class CreateBookingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_booking);
-        ButterKnife.bind(CreateBookingActivity.this);
+        binding = ActivityCreateBookingBinding.inflate(getLayoutInflater());
+        view = binding.getRoot();
+        setContentView(view);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
         if(getSupportActionBar() != null){
             getSupportActionBar().setTitle("Create BookingLab");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,14 +57,14 @@ public class CreateBookingActivity extends AppCompatActivity {
     }
 
     private void txtClick() {
-        txtWaktuMulai.setFocusable(false);
-        txtWaktuSelesai.setFocusable(false);
-        txtTanggal.setFocusable(false);
-        txtDosen.setFocusable(false);
-        txtLab.setFocusable(false);
-        txtPraktikum.setFocusable(false);
+        binding.txtWaktuMulai.setFocusable(false);
+        binding.txtWaktuSelesai.setFocusable(false);
+        binding.txtTanggal.setFocusable(false);
+        binding.txtDosen.setFocusable(false);
+        binding.txtLab.setFocusable(false);
+        binding.txtPraktikum.setFocusable(false);
 
-        txtWaktuMulai.setOnClickListener(new View.OnClickListener() {
+        binding.txtWaktuMulai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar c = Calendar.getInstance();
@@ -84,13 +73,13 @@ public class CreateBookingActivity extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(CreateBookingActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        txtWaktuMulai.setText(i + ":" + i1);
+                        binding.txtWaktuMulai.setText(i + ":" + i1);
                     }
                 }, hour, minute, android.text.format.DateFormat.is24HourFormat(CreateBookingActivity.this));
                 timePickerDialog.show();
             }
         });
-        txtWaktuSelesai.setOnClickListener(new View.OnClickListener() {
+        binding.txtWaktuSelesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar c = Calendar.getInstance();
@@ -99,13 +88,13 @@ public class CreateBookingActivity extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(CreateBookingActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        txtWaktuSelesai.setText(i + ":" + i1);
+                        binding.txtWaktuSelesai.setText(i + ":" + i1);
                     }
                 }, hour, minute, android.text.format.DateFormat.is24HourFormat(CreateBookingActivity.this));
                 timePickerDialog.show();
             }
         });
-        txtTanggal.setOnClickListener(new View.OnClickListener() {
+        binding.txtTanggal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar c = Calendar.getInstance();
@@ -115,39 +104,39 @@ public class CreateBookingActivity extends AppCompatActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(CreateBookingActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        txtTanggal.setText(i + "/" + (i1+1) + "/" + i2);
+                        binding.txtTanggal.setText(i + "/" + (i1+1) + "/" + i2);
                     }
                 }, year, month, day);
                 datePickerDialog.show();
             }
         });
-        txtDosen.setOnClickListener(new View.OnClickListener() {
+        binding.txtDosen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(CreateBookingActivity.this, DosenActivity.class);
                 startActivityForResult(i, 1);
             }
         });
-        txtLab.setOnClickListener(new View.OnClickListener() {
+        binding.txtLab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(CreateBookingActivity.this, LabActivity.class);
                 startActivityForResult(i, 2);
             }
         });
-        txtPraktikum.setOnClickListener(new View.OnClickListener() {
+        binding.txtPraktikum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(CreateBookingActivity.this, PraktikumActivity.class);
                 startActivityForResult(i, 3);
             }
         });
-        btnSave.setOnClickListener(new View.OnClickListener() {
+        binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String a = txtWaktuMulai.getText().toString().trim();
-                String b = txtWaktuSelesai.getText().toString().trim();
-                String c = txtTanggal.getText().toString().trim();
+                String a = binding.txtWaktuMulai.getText().toString().trim();
+                String b = binding.txtWaktuSelesai.getText().toString().trim();
+                String c = binding.txtTanggal.getText().toString().trim();
                 String[] data = new String[]{a, b, c, dosen_id, lab_id, praktikum_id};
                 saveData(data);
             }
@@ -213,17 +202,17 @@ public class CreateBookingActivity extends AppCompatActivity {
         if(requestCode == 1 && resultCode == -1) {
             dosen_id = data != null ? data.getStringExtra(EXTRA_DOSEN_ID).trim() : "";
             String b = data != null ? data.getStringExtra(EXTRA_DOSEN_NAME).trim() : "";
-            txtDosen.setText(b);
+            binding.txtDosen.setText(b);
         }
         if(requestCode == 2 && resultCode == -2) {
             lab_id = data != null ? data.getStringExtra(EXTRA_LAB_ID).trim() : "";
             String b = data != null ? data.getStringExtra(EXTRA_LAB_NAME).trim() : "";
-            txtLab.setText(b);
+            binding.txtLab.setText(b);
         }
         if(requestCode == 3 && resultCode == -3) {
             praktikum_id = data != null ? data.getStringExtra(EXTRA_PRAKTIKUM_ID).trim() : "";
             String b = data != null ? data.getStringExtra(EXTRA_PRAKTIKUM_NAME).trim() : "";
-            txtPraktikum.setText(b);
+            binding.txtPraktikum.setText(b);
         }
     }
 }

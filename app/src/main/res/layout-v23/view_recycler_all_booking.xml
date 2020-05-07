@@ -9,7 +9,7 @@
     android:paddingLeft="8dp">
 
     <TextView
-        android:id="@+id/_nama_lab"
+        android:id="@+id/nama_lab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -20,29 +20,29 @@
         android:textStyle="bold"/>
 
     <TextView
-        android:id="@+id/_kelas"
+        android:id="@+id/kelas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
-        android:layout_below="@id/_nama_lab"
+        android:layout_below="@id/nama_lab"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Kelas"/>
 
     <TextView
-        android:id="@+id/_nama_dosen"
+        android:id="@+id/nama_dosen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
-        android:layout_below="@id/_nama_lab"
-        android:layout_toEndOf="@id/_kelas"
+        android:layout_below="@id/nama_lab"
+        android:layout_toEndOf="@id/kelas"
         android:textStyle="bold"
         android:text="Nama Dosen"/>
 
     <TextView
-        android:id="@+id/_expired"
+        android:id="@+id/expired"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -52,17 +52,17 @@
         android:layout_marginBottom="8dp"
         android:textAllCaps="true"
         android:textStyle="bold"
-        android:layout_alignEnd="@id/_nama_lab"/>
+        android:layout_alignEnd="@id/nama_lab"/>
 
     <TextView
-        android:id="@+id/_waktu_mulai"
+        android:id="@+id/waktu_mulai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:text="Waktu"
-        android:layout_marginTop="34dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_alignEnd="@id/_nama_dosen"/>
+        android:layout_below="@id/expired"
+        android:layout_alignEnd="@id/nama_dosen"/>
 
 </RelativeLayout>

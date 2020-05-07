@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.ProfileFragment"
-    android:id="@+id/_profile">
+    android:id="@+id/profile">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ProgressBar
-            android:id="@+id/_progress_bar"
+            android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" />
@@ -23,7 +23,7 @@
             android:scrollbars="vertical">
 
             <LinearLayout
-                android:id="@+id/_hide_profile"
+                android:id="@+id/hide_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -40,13 +40,13 @@
                         android:layout_height="120dp"
                         android:layout_centerInParent="true"
                         tools:src="@android:color/darker_gray"
-                        android:id="@+id/_photo_profile"
+                        android:id="@+id/photo_profile"
                         android:transitionName="pict_animation"/>
 
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/_nama_profile"
+                    android:id="@+id/nama_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nama"
@@ -56,7 +56,7 @@
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
-                    android:id="@+id/_created_at_profile"
+                    android:id="@+id/created_at_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Created"
@@ -97,7 +97,7 @@
                                     android:text=":" />
 
                                 <TextView
-                                    android:id="@+id/_username_profile"
+                                    android:id="@+id/username_profile"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
@@ -125,7 +125,7 @@
                                     android:text=":" />
 
                                 <TextView
-                                    android:id="@+id/_nim_profile"
+                                    android:id="@+id/nim_profile"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"

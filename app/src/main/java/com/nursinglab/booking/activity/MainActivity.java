@@ -1,40 +1,37 @@
 package com.nursinglab.booking.activity;
 
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
-import android.view.MenuItem;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nursinglab.booking.R;
+import com.nursinglab.booking.databinding.ActivityMainBinding;
 import com.nursinglab.booking.fragment.AllBookingFragment;
 import com.nursinglab.booking.fragment.MyBookingFragment;
 import com.nursinglab.booking.fragment.ProfileFragment;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id._bottom_navigation) BottomNavigationView bottomNav;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-
-    int getMenuChecked;
+    private int getMenuChecked;
+    private ActivityMainBinding binding;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(MainActivity.this);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        view = binding.getRoot();
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
 
-        bottomNav.setOnNavigationItemSelectedListener(navBar);
-        bottomNav.getMenu().findItem(R.id.nav_my_booking).setChecked(true); // make checked Home Fragment
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(navBar);
+        binding.bottomNavigation.getMenu().findItem(R.id.nav_my_booking).setChecked(true); // make checked Home Fragment
         //bottomNav.getMenu().findItem(R.id.nav_home).setEnabled(false); // make unchecked Home Fragment
 
         loadFragment(new MyBookingFragment());
@@ -46,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectFrag;
 
             getMenuChecked = menuItem.getItemId();
-            for (int i=0; i<bottomNav.getMenu().size(); i++){
-                MenuItem menuT = bottomNav.getMenu().getItem(i);
+            for (int i=0; i<binding.bottomNavigation.getMenu().size(); i++){
+                MenuItem menuT = binding.bottomNavigation.getMenu().getItem(i);
                 //boolean isEnable = menuT.getItemId() != getMenuChecked;
                 boolean isChecked = menuT.getItemId() == getMenuChecked;
                 //menuT.setEnabled(isEnable);
@@ -58,17 +55,17 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_my_booking:
                     selectFrag = new MyBookingFragment();
                     loadFragment(selectFrag);
-                    toolbar.setTitle(R.string.app_name);
+                    binding.toolbar.setTitle(R.string.app_name);
                     return true;
                 case R.id.nav_all_booking:
                     selectFrag = new AllBookingFragment();
                     loadFragment(selectFrag);
-                    toolbar.setTitle("All Booking");
+                    binding.toolbar.setTitle("All Booking");
                     return true;
                 case R.id.nav_olahraga:
                     selectFrag = new ProfileFragment();
                     loadFragment(selectFrag);
-                    toolbar.setTitle("Profile");
+                    binding.toolbar.setTitle("Profile");
                     return true;
             }
             return false;

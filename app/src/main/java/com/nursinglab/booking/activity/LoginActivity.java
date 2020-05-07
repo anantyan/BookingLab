@@ -4,22 +4,18 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.nursinglab.booking.R;
 import com.nursinglab.booking.api.Auth;
 import com.nursinglab.booking.component.RecordsComponent;
 import com.nursinglab.booking.component.ResponseComponent;
 import com.nursinglab.booking.component.SharedPreferenceComponent;
+import com.nursinglab.booking.databinding.ActivityLoginBinding;
 import com.nursinglab.booking.util.RetrofitUtil;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,17 +23,16 @@ import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
-    @BindView(R.id._username) EditText txtUsername;
-    @BindView(R.id._password) EditText txtPassword;
-    @BindView(R.id._btn_login) Button btnLogin;
-
     private ProgressDialog progressDialog;
+    private ActivityLoginBinding binding;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(LoginActivity.this);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        view = binding.getRoot();
+        setContentView(view);
 
         //cek session pengguna telah masuk
         if(SharedPreferenceComponent.getLoggedStatus(getApplicationContext())) {
@@ -50,20 +45,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void btnLogin() {
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = txtUsername.getText().toString().trim();
-                String password = txtPassword.getText().toString().trim();
+                String username = binding.username.getText().toString().trim();
+                String password = binding.password.getText().toString().trim();
 
                 if(username.equals("")) {
                     Toast.makeText(LoginActivity.this, "Username harus diisi!", Toast.LENGTH_LONG).show();
-                    txtUsername.setError("Username harus diisi!");
-                    txtUsername.requestFocus();
+                    binding.username.setError("Username harus diisi!");
+                    binding.username.requestFocus();
                 } else if(password.equals("")) {
                     Toast.makeText(LoginActivity.this, "Passowrd harus diisi!", Toast.LENGTH_LONG).show();
-                    txtPassword.setError("Password harus diisi!");
-                    txtPassword.requestFocus();
+                    binding.password.setError("Password harus diisi!");
+                    binding.password.requestFocus();
                 } else {
                     progressDialog = new ProgressDialog(LoginActivity.this);
                     progressDialog.setCancelable(false);
@@ -104,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onFailure(Call<ResponseComponent> call, Throwable t) {
 
                             progressDialog.dismiss();
-                            Snackbar.make(findViewById(R.id._login), "Kesalahan pada jaringan!", Snackbar.LENGTH_LONG)
+                            Snackbar.make(view, "Kesalahan pada jaringan!", Snackbar.LENGTH_LONG)
                                     .setAction("Oke", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {

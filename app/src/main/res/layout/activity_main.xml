@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity"
-    android:id="@+id/_main">
+    tools:context=".activity.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/_appbar"
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -28,12 +27,12 @@
         android:id="@+id/fragment_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/_appbar"
-        android:layout_above="@id/_bottom_navigation"
+        android:layout_below="@id/appbar"
+        android:layout_above="@id/bottom_navigation"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/_bottom_navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_alignParentBottom="true"

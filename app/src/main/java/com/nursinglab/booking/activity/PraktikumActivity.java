@@ -7,17 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -26,14 +23,13 @@ import com.nursinglab.booking.adapter.PraktikumAdapter;
 import com.nursinglab.booking.api.Booking;
 import com.nursinglab.booking.component.BookingIdComponent;
 import com.nursinglab.booking.component.ResponseComponent;
+import com.nursinglab.booking.databinding.ActivityPraktikumBinding;
 import com.nursinglab.booking.listener.RecyclerOnItemListener;
 import com.nursinglab.booking.util.RetrofitUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,22 +40,20 @@ import static com.nursinglab.booking.activity.CreateBookingActivity.EXTRA_PRAKTI
 
 public class PraktikumActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id._select_data) RecyclerView recyclerView;
-    @BindView(R.id._progress_bar) ProgressBar progressBar;
-    @BindView(R.id._swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
-
     private SearchView searchView;
     private List<BookingIdComponent> booking = new ArrayList<>();
     private PraktikumAdapter praktikumAdapter;
+    private ActivityPraktikumBinding binding;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_praktikum);
-        ButterKnife.bind(this);
+        binding = ActivityPraktikumBinding.inflate(getLayoutInflater());
+        view = binding.getRoot();
+        setContentView(view);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
         if(getSupportActionBar() != null){
             getSupportActionBar().setTitle("Pilih Praktikum");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,7 +62,7 @@ public class PraktikumActivity extends AppCompatActivity {
         getData();
         recyclerView();
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
@@ -76,20 +70,20 @@ public class PraktikumActivity extends AppCompatActivity {
                 getData();
 
                 //StopAnimate with Delay
-                swipeRefreshLayout.setRefreshing(false);
+                binding.swipeRefresh.setRefreshing(false);
             }
         });
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        binding.swipeRefresh.setColorSchemeResources(R.color.colorAccent);
     }
 
     private void recyclerView() {
         praktikumAdapter = new PraktikumAdapter(PraktikumActivity.this, booking);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(PraktikumActivity.this));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(PraktikumActivity.this, LinearLayoutManager.VERTICAL));
-        recyclerView.setAdapter(praktikumAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerOnItemListener(PraktikumActivity.this, recyclerView, new RecyclerOnItemListener.ClickListener() {
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(PraktikumActivity.this));
+        binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        binding.recyclerView.addItemDecoration(new DividerItemDecoration(PraktikumActivity.this, LinearLayoutManager.VERTICAL));
+        binding.recyclerView.setAdapter(praktikumAdapter);
+        binding.recyclerView.addOnItemTouchListener(new RecyclerOnItemListener(PraktikumActivity.this, binding.recyclerView, new RecyclerOnItemListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
                 BookingIdComponent bookingIdComponent = booking.get(position);
@@ -108,8 +102,8 @@ public class PraktikumActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        recyclerView.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+        binding.recyclerView.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.VISIBLE);
 
         Retrofit retrofit = RetrofitUtil.getClient();
         Booking bkng = retrofit.create(Booking.class);
@@ -117,8 +111,8 @@ public class PraktikumActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseComponent>() {
             @Override
             public void onResponse(Call<ResponseComponent> call, Response<ResponseComponent> response) {
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
+                binding.recyclerView.setVisibility(View.VISIBLE);
                 Integer error = response.body() != null ? response.body().getError() : null;
                 String status = response.body() != null ? response.body().getStatus() : null;
                 booking = response.body() != null ? response.body().getBooking() : null;
@@ -126,7 +120,7 @@ public class PraktikumActivity extends AppCompatActivity {
                     assert error != null;
                     if(error.equals(1)) {
                         praktikumAdapter = new PraktikumAdapter(PraktikumActivity.this, booking);
-                        recyclerView.setAdapter(praktikumAdapter);
+                        binding.recyclerView.setAdapter(praktikumAdapter);
                     }else{
                         Toast.makeText(PraktikumActivity.this, status, Toast.LENGTH_SHORT).show();
                     }
@@ -138,9 +132,9 @@ public class PraktikumActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseComponent> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
-                Snackbar.make(findViewById(R.id._praktikum), "Kesalahan pada jaringan!", Snackbar.LENGTH_LONG)
+                binding.progressBar.setVisibility(View.GONE);
+                binding.recyclerView.setVisibility(View.GONE);
+                Snackbar.make(view, "Kesalahan pada jaringan!", Snackbar.LENGTH_LONG)
                         .setAction("Oke", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

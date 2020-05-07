@@ -1,9 +1,6 @@
 package com.nursinglab.booking.adapter;
 
 import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +8,16 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.nursinglab.booking.R;
 import com.nursinglab.booking.component.ResultComponent;
+import com.nursinglab.booking.databinding.ViewRecyclerMyBookingBinding;
 import com.nursinglab.booking.helper.ItemClickHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.ViewHolder> implements Filterable {
 
@@ -35,14 +33,17 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id._nama_lab) TextView namaLab;
-        @BindView(R.id._nama_dosen) TextView namaDosen;
-        @BindView(R.id._waktu_mulai) TextView waktuMulai;
-        @BindView(R.id._expired) TextView expired;
+        private TextView namaLab;
+        private TextView namaDosen;
+        private TextView waktuMulai;
+        private TextView expired;
 
-        ViewHolder(@NonNull View itemView, final ItemClickHelper itemClickHelper) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        ViewHolder(ViewRecyclerMyBookingBinding binding, final ItemClickHelper itemClickHelper) {
+            super(binding.getRoot());
+            namaLab = binding.namaLab;
+            namaDosen = binding.namaDosen;
+            waktuMulai = binding.waktuMulai;
+            expired = binding.expired;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -66,9 +67,8 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
     @NonNull
     @Override
     public MyBookingAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_recycler_my_booking, viewGroup, false);
-        MyBookingAdapter.ViewHolder holder = new MyBookingAdapter.ViewHolder(v, itemClickHelper);
-        return holder;
+        ViewRecyclerMyBookingBinding binding = ViewRecyclerMyBookingBinding.inflate(LayoutInflater.from(viewGroup.getContext()));
+        return new ViewHolder(binding, itemClickHelper);
     }
 
     @Override
